@@ -1,0 +1,12 @@
+Code is distributed under Apache License
+
+Please do not remove this file
+
+Institution:
+Indiana University
+
+Authors:
+Gregor von Laszewski
+
+e-mail:
+laszewski@gmail.com
