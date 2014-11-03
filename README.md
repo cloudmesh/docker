@@ -1,3 +1,2 @@
-PLEASE SEE:
+Docker cm project
 
-* https://github.com/futuregrid/virtual-cluster/blob/master/doc/source/intro.rst
