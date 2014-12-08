@@ -1,0 +1,188 @@
+#!/usr/bin/env python
+# Docker class to connect to docker server box and perform docker operations
+from __future__ import print_function
+import cloudmesh
+from cloudmesh_docker.api.docker_instance import Cloudmeshdocker,Container,Images
+from cloudmesh.config.cm_config import get_mongo_db, DBConnFactory
+from cloudmesh.cm_mongo import cm_mongo
+import urllib2
+import requests
+import json
+
+username = cloudmesh.load().username()
+#mesh = cloudmesh.mesh("mongo")
+#mesh.activate(username)
+#cm = cm_mongo("docker")
+#get_mongo_db("cloudmesh", DBConnFactory.TYPE_MONGOENGINE)
+
+class Docker(object):
+
+    def docker_container_create(self,image,containername=None,containers=None):
+        dockerserverobjs = Cloudmeshdocker.objects()
+        if len(dockerserverobjs) == 0:
+            print("Cloud is not defined yet")
+            return
+
+        for server in dockerserverobjs:
+            dockerserver = server.dockerserver
+
+        dockerserverurl = "http://%s:4243"%dockerserver
+
+        postUrl = "%s/containers/create"%dockerserverurl
+        headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+        payload = {"Hostname":"","User":"","Memory":0,"MemorySwap":0,"AttachStdin":'true',"AttachStdout":'true',"AttachStderr":'true',"PortSpecs":'null',"Privileged": 'false',"Tty":'true',"OpenStdin":'true',"StdinOnce":'false',"Env":'null',"Dns":'null',"Volumes":'{}',"VolumesFrom":"","WorkingDir":""}
+        payload["Image"] = str(image)
+        if containername is not None:
+            postUrl += "?name=%s"%containername
+            resp = requests.post(url=postUrl,data=json.dumps(payload),headers=headers)
+            data = json.loads(resp.text)
+            print("Container %s is created"%containername)
+            Container(containerName=containername,containerImage=str(image),containerId=data['Id'],containerStatus="created").save()
+
+
+    def docker_container_attach(self,containerName=None):
+        dockerserverobjs = Cloudmeshdocker.objects()
+        if len(dockerserverobjs) == 0:
+            print("Cloud is not defined yet")
+            return
+
+        for server in dockerserverobjs:
+            dockerserver = server.dockerserver
+
+        dockerserverurl = "http://%s:4243"%dockerserver
+        containerInfo = Container.objects.get(containerName=containerName)
+        if len(containerInfo) == 0:
+            print("Container does not exist")
+            return
+
+        postUrl = "%s/containers/%s/attach?logs=1&stream=0&stdout=1"%(dockerserverurl,containerInfo.containerId)
+        resp = requests.post(url=postUrl)
+
+
+    def docker_container_status(self,status=None,containerName=None):
+        if status is None:
+            print("No status specified")
+            return
+
+        dockerserverobjs = Cloudmeshdocker.objects()
+        if len(dockerserverobjs) == 0:
+            print("Cloud is not defined yet")
+            return
+
+        for server in dockerserverobjs:
+            dockerserver = server.dockerserver
+
+        dockerserverurl = "http://%s:4243"%dockerserver
+        containerInfo = Container.objects.get(containerName=containerName)
+        if len(containerInfo) == 0:
+            print("Container does not exist")
+            return
+
+        postUrl = "%s/containers/%s/%s"%(dockerserverurl,containerInfo.containerId,status)
+        resp = requests.post(url=postUrl)
+    
+        containerInfo.update(containerStatus=status)
+        
+
+    def docker_container_delete(self,containerName=None):
+        dockerserverobjs = Cloudmeshdocker.objects()
+        if len(dockerserverobjs) == 0:
+            print("Cloud is not defined yet")
+            return
+
+        for server in dockerserverobjs:
+            dockerserver = server.dockerserver
+
+        dockerserverurl = "http://%s:4243"%dockerserver
+        containerInfo = Container.objects.get(containerName=containerName)
+        if len(containerInfo) == 0:
+            print("Container does not exist")
+            return
+
+        deleteUrl = "%s/containers/%s?v=1"%(dockerserverurl,containerInfo.containerId)
+        resp = requests.delete(url=deleteUrl)
+
+        # Delete from database
+        containerInfo.delete()
+
+
+    def docker_container_list(self):
+        containers = Container.objects()
+        if len(containers) == 0:
+            print("No containers exist")
+            return
+
+        print("Name\t\tStatus")
+        for container in containers:
+            print(container.containerName + "\t\t" + container.containerStatus)
+
+
+    def docker_service_start(self,cloud):
+        ##
+        # TODO: Add support for more clouds
+        ##
+        dockerserverobjs = Cloudmeshdocker.objects()
+        if len(dockerserverobjs) != 0:
+            self.docker_service_cloud_delete()
+        
+        print("Starting Docker Service...")
+      
+        dockerserverurl = "http://%s:4243"%cloud
+
+        # LIST IMAGES
+        postUrl = "%s/images/json"%dockerserverurl
+        payload = {}
+        resp = requests.get(url=postUrl)
+        data = json.loads(resp.text)
+        print("Listing Available Images....")
+        if len(data) == 0:
+            print("No images found on docker server")
+            return
+
+        for imageData in data:
+            images = imageData["RepoTags"]
+            for image in images:
+                Images(imageName=image,imageId=imageData["Id"],imageSize=str(imageData["Size"])).save()
+                print(image)
+        
+        dockerserverobjs = Cloudmeshdocker.objects()
+        if len(dockerserverobjs) == 0:
+            Cloudmeshdocker(dockerserver=cloud).save()
+            return
+        
+        for server in dockerserverobjs:
+            if str(server.dockerserver) == cloud:
+                print("Cloud already exist")
+                return
+
+        Cloudmeshdocker(dockerserver=cloud).save()
+
+
+    def docker_images_list(self):
+        images = Images.objects()
+        if len(images) == 0:
+            print("No images exist")
+            return
+
+        for image in images:
+            print(image.imageName)
+
+    def docker_service_cloud_list(self):
+        dockerserverobjs = Cloudmeshdocker.objects()
+        if len(dockerserverobjs) == 0:
+            print("No cloud exist yet")
+            return
+
+        print("Listing existing cloud..")
+        for server in dockerserverobjs:
+            print(server.dockerserver)
+
+    def docker_service_cloud_delete(self,cloud=None):
+        dockerserverobjs = Cloudmeshdocker.objects()
+        if len(dockerserverobjs) == 0:
+            print("No cloud to remove")
+            return
+
+        for server in dockerserverobjs:
+            server.delete()
+
