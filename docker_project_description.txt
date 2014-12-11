@@ -1,20 +1,39 @@
+-----------------
 Cloudmesh Docker
 -----------------
 
 Objective:
+----------
 
 This project's objective is to develop docker client interface for cloudmesh. Docker is an open source project that providies a layer of abstraction and automation of operating system-level virtualization on Linux. It automates the deployment of applications inside software containers.
 
 
 Project requirements:
+---------------------
 
 (1) Deploying docker server (Amazon EC2 instances used here) 
 (1) Developing commandline interface for docker client to integrate with existing cloudmesh shell.
 
+Design:
+-------
+
+(1) Cloudmesh server is configured on Linux Ubuntu box.
+(2) When we start the cloudmesh shell, the docker client is loaded and the data is stored in mongodb with three collections defined - Cloudmeshdocker, Images and Containers. The data is persistent throughout the connection.
+(3) REST API calls are made for docker usage.
+
 Usage:
+------
 
 (1) docker container create, docker container delete, etc.
 
+Limitations/Issues:
+-------------------
+
+(1) Currently docker attach(docker run) doesn't work (Need to figure out how to use stdin,stdout for this). Other workaround can be to use remote ssh.
+(2) Currently supports only one cloud
+(3) Docker server needs to be configured on secure port. Currently, it is public for anyone to access it.
+
 Github repository:
+------------------
 
 https://github.com/cloudmesh/docker
