@@ -6,7 +6,6 @@ class Cloudmeshdocker(Document):
     meta = {'allow_inheritance': True}
     get_mongo_db("cloudmesh", DBConnFactory.TYPE_MONGOENGINE)
 
-
 class Container(Document):
     containerId = StringField(required=True)
     containerImage = StringField(required=True)

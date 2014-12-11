@@ -17,7 +17,8 @@ username = cloudmesh.load().username()
 
 class Docker(object):
 
-    def docker_container_create(self,image,containername=None,containers=None):
+
+    def docker_container_create(self,image,containerName=None,containers=None):
         dockerserverobjs = Cloudmeshdocker.objects()
         if len(dockerserverobjs) == 0:
             print("Cloud is not defined yet")
@@ -30,14 +31,14 @@ class Docker(object):
 
         postUrl = "%s/containers/create"%dockerserverurl
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        payload = {"Hostname":"","User":"","Memory":0,"MemorySwap":0,"AttachStdin":'true',"AttachStdout":'true',"AttachStderr":'true',"PortSpecs":'null',"Privileged": 'false',"Tty":'true',"OpenStdin":'true',"StdinOnce":'false',"Env":'null',"Dns":'null',"Volumes":'{}',"VolumesFrom":"","WorkingDir":""}
+        payload = {"Hostname":"","User":"","Memory":0,"MemorySwap":0,"AttachStdin":'true',"AttachStdout":'true',"AttachStderr":'true',"PortSpecs":'null',"Privileged": 'false',"Tty":'false',"OpenStdin":'true',"StdinOnce":'true',"Env":'null',"Dns":'null',"Volumes":'{}',"VolumesFrom":"","WorkingDir":""}
         payload["Image"] = str(image)
-        if containername is not None:
-            postUrl += "?name=%s"%containername
+        if containerName is not None:
+            postUrl += "?name=%s"%containerName
             resp = requests.post(url=postUrl,data=json.dumps(payload),headers=headers)
             data = json.loads(resp.text)
-            print("Container %s is created"%containername)
-            Container(containerName=containername,containerImage=str(image),containerId=data['Id'],containerStatus="created").save()
+            print("Container %s is created"%containerName)
+            Container(containerName=containerName,containerImage=str(image),containerId=data['Id'],containerStatus="created").save()
 
 
     def docker_container_attach(self,containerName=None):
@@ -59,7 +60,7 @@ class Docker(object):
         resp = requests.post(url=postUrl)
 
 
-    def docker_container_status(self,status=None,containerName=None):
+    def docker_container_status_change(self,status=None,containerName=None):
         if status is None:
             print("No status specified")
             return
@@ -80,8 +81,11 @@ class Docker(object):
 
         postUrl = "%s/containers/%s/%s"%(dockerserverurl,containerInfo.containerId,status)
         resp = requests.post(url=postUrl)
-    
-        containerInfo.update(containerStatus=status)
+   
+        if status is "unpause" or status is "start":
+            status = "running"
+
+        containerInfo.update(set__containerStatus=status)
         
 
     def docker_container_delete(self,containerName=None):
@@ -167,6 +171,7 @@ class Docker(object):
         for image in images:
             print(image.imageName)
 
+
     def docker_service_cloud_list(self):
         dockerserverobjs = Cloudmeshdocker.objects()
         if len(dockerserverobjs) == 0:
@@ -177,6 +182,7 @@ class Docker(object):
         for server in dockerserverobjs:
             print(server.dockerserver)
 
+
     def docker_service_cloud_delete(self,cloud=None):
         dockerserverobjs = Cloudmeshdocker.objects()
         if len(dockerserverobjs) == 0:
@@ -186,3 +192,6 @@ class Docker(object):
         for server in dockerserverobjs:
             server.delete()
 
+        images = Images.objects()
+        for image in images:
+            image.delete()

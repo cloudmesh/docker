@@ -64,18 +64,14 @@ class cm_shell_docker:
             Docker().docker_container_create("{IMAGE}".format(**arguments),"{NAME}".format(**arguments))
             return
 
-        if arguments["container"] and arguments["create"] and arguments["CONTAINERS"]:
-            Docker().docker_container_create("{CONTAINERS}".format(**arguments))
-            return
-
         if arguments["container"] and arguments["start"] and arguments["NAME"]:
             status = "start"
-            Docker().docker_container_status(status,"{NAME}".format(**arguments))
+            Docker().docker_container_status_change(status,"{NAME}".format(**arguments))
             return
 
         if arguments["container"] and arguments["stop"] and arguments["NAME"]:
             status = "stop"
-            Docker().docker_container_status(status,"{NAME}".format(**arguments))
+            Docker().docker_container_status_change(status,"{NAME}".format(**arguments))
             return
 
         if arguments["container"] and arguments["list"]:
@@ -92,17 +88,17 @@ class cm_shell_docker:
 
         if arguments["container"] and arguments["pause"] and arguments["NAME"]:
             status = "pause"
-            Docker().docker_container_status(status,"{NAME}".format(**arguments))
+            Docker().docker_container_status_change(status,"{NAME}".format(**arguments))
             return
 
         if arguments["container"] and arguments["unpause"] and arguments["NAME"]:
             status = "unpause"
-            Docker().docker_container_status(status,"{NAME}".format(**arguments))
+            Docker().docker_container_status_change(status,"{NAME}".format(**arguments))
             return
         
         if arguments["container"] and arguments["restart"] and arguments["NAME"]:
             status = "restart"
-            Docker().docker_container_status("{NAME}".format(**arguments))
+            Docker().docker_container_status_change("{NAME}".format(**arguments))
             return
 
         if arguments["images"] and arguments["list"]:

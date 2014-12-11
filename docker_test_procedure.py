@@ -18,6 +18,11 @@
 # docker container attach NAME : This exists but currently there are some issues for login to the container
 # DOCKER CLOUD SERVER created for test: Ubuntu Amazon EC2 instances - (a) 54.148.243.157 (b) 54.149.122.57
 #
+# HOW TO RUN:
+# (1) PULL OUT THE REPO IN CLOUDMESH
+# (2) COPY THE PLUGINS/CM_SHELL_DOCKER.PY TO CLOUMESH_CMD3/PLUGINS/
+# (3) RUN THIS FILE (PYTHON DOCKER_TEST_PROCEDURE.PY)
+#
 ###########################################################################################################
 
 import cloudmesh
