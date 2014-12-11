@@ -1,0 +1,20 @@
+Cloudmesh Docker
+-----------------
+
+Objective:
+
+This project's objective is to develop docker client interface for cloudmesh. Docker is an open source project that providies a layer of abstraction and automation of operating system-level virtualization on Linux. It automates the deployment of applications inside software containers.
+
+
+Project requirements:
+
+(1) Deploying docker server (Amazon EC2 instances used here) 
+(1) Developing commandline interface for docker client to integrate with existing cloudmesh shell.
+
+Usage:
+
+(1) docker container create, docker container delete, etc.
+
+Github repository:
+
+https://github.com/cloudmesh/docker
