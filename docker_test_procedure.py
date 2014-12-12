@@ -1,4 +1,4 @@
-##########################################################################################################
+##########################################################################
 # DOCKER TEST PROCEDURE
 # ---------------------
 # Docker lifecycle test
@@ -23,7 +23,7 @@
 # (2) COPY THE PLUGINS/CM_SHELL_DOCKER.PY TO CLOUMESH_CMD3/PLUGINS/
 # (3) RUN THIS FILE (PYTHON DOCKER_TEST_PROCEDURE.PY)
 #
-###########################################################################################################
+##########################################################################
 
 import cloudmesh
 from pprint import pprint
@@ -43,7 +43,8 @@ print("Listing available images......................")
 print cloudmesh.shell("docker images list")
 
 # Create container
-print("Creating container with name docker_cont_1 and image ubuntu:latest..........")
+print(
+    "Creating container with name docker_cont_1 and image ubuntu:latest..........")
 print cloudmesh.shell("docker container create docker_cont_1 ubuntu:latest")
 print cloudmesh.shell("docker container create docker_cont_2 ubuntu:latest")
 print cloudmesh.shell("docker container create docker_cont_3 ubuntu:latest")
@@ -81,4 +82,3 @@ print cloudmesh.shell("docker container list")
 # Remove cloud
 print("Deleting cloud.................")
 print cloudmesh.shell("docker service cloud delete")
-
