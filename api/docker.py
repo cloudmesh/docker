@@ -31,8 +31,23 @@ class Docker(object):
 
         postUrl = "%s/containers/create" % dockerserverurl
         headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-        payload = {"Hostname": "", "User": "", "Memory": 0, "MemorySwap": 0, "AttachStdin": 'true', "AttachStdout": 'true', "AttachStderr": 'true', "PortSpecs": 'null',
-                   "Privileged": 'false', "Tty": 'false', "OpenStdin": 'true', "StdinOnce": 'true', "Env": 'null', "Dns": 'null', "Volumes": '{}', "VolumesFrom": "", "WorkingDir": ""}
+        payload = {"Hostname": "",
+                   "User": "",
+                   "Memory": 0,
+                   "MemorySwap": 0,
+                   "AttachStdin": 'true',
+                   "AttachStdout": 'true',
+                   "AttachStderr": 'true',
+                   "PortSpecs": 'null',
+                   "Privileged": 'false',
+                   "Tty": 'false',
+                   "OpenStdin": 'true',
+                   "StdinOnce": 'true',
+                   "Env": 'null',
+                   "Dns": 'null',
+                   "Volumes": '{}',
+                   "VolumesFrom": "",
+                   "WorkingDir": ""}
         payload["Image"] = str(image)
         if containerName is not None:
             postUrl += "?name=%s" % containerName
