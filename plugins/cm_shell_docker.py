@@ -22,7 +22,7 @@ class cm_shell_docker:
             docker service start CLOUD
             docker service cloud list
             docker service cloud delete
-            docker container create NAME IMAGE 
+            docker container create NAME IMAGE
             docker container start NAME
             docker container stop NAME
             docker container list
@@ -59,7 +59,7 @@ class cm_shell_docker:
         if arguments["service"] and arguments["cloud"] and arguments["delete"]:
             Docker().docker_service_cloud_delete()
             return
-        
+
         if arguments["container"] and arguments["create"] and arguments["NAME"] and arguments["IMAGE"]:
             Docker().docker_container_create("{IMAGE}".format(**arguments),"{NAME}".format(**arguments))
             return
@@ -95,7 +95,7 @@ class cm_shell_docker:
             status = "unpause"
             Docker().docker_container_status_change(status,"{NAME}".format(**arguments))
             return
-        
+
         if arguments["container"] and arguments["restart"] and arguments["NAME"]:
             status = "restart"
             Docker().docker_container_status_change("{NAME}".format(**arguments))

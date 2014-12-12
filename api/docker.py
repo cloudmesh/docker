@@ -81,12 +81,12 @@ class Docker(object):
 
         postUrl = "%s/containers/%s/%s"%(dockerserverurl,containerInfo.containerId,status)
         resp = requests.post(url=postUrl)
-   
+
         if status is "unpause" or status is "start":
             status = "running"
 
         containerInfo.update(set__containerStatus=status)
-        
+
 
     def docker_container_delete(self,containerName=None):
         dockerserverobjs = Cloudmeshdocker.objects()
@@ -128,9 +128,9 @@ class Docker(object):
         dockerserverobjs = Cloudmeshdocker.objects()
         if len(dockerserverobjs) != 0:
             self.docker_service_cloud_delete()
-        
+
         print("Starting Docker Service...")
-      
+
         dockerserverurl = "http://%s:4243"%cloud
 
         # LIST IMAGES
@@ -148,12 +148,12 @@ class Docker(object):
             for image in images:
                 Images(imageName=image,imageId=imageData["Id"],imageSize=str(imageData["Size"])).save()
                 print(image)
-        
+
         dockerserverobjs = Cloudmeshdocker.objects()
         if len(dockerserverobjs) == 0:
             Cloudmeshdocker(dockerserver=cloud).save()
             return
-        
+
         for server in dockerserverobjs:
             if str(server.dockerserver) == cloud:
                 print("Cloud already exist")

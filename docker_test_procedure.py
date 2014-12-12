@@ -80,5 +80,5 @@ print cloudmesh.shell("docker container list")
 
 # Remove cloud
 print("Deleting cloud.................")
-print cloudmesh.shell("docker service cloud delete") 
+print cloudmesh.shell("docker service cloud delete")
 

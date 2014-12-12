@@ -1,4 +1,4 @@
-# THIS IS ONLY TESTED ON UBUNTU 
+# THIS IS ONLY TESTED ON UBUNTU
 #
 ################## The following configuration is done on EC2 instance manually to setup docker server:
 #
