@@ -23,7 +23,7 @@ Project requirements:
 Design:
 -------
 
-*  Cloudmesh server is configured on Linux Ubuntu box.
+* Cloudmesh server is configured on Linux Ubuntu box.
 
 * When we start the cloudmesh shell, the docker client is loaded and
    the data is stored in mongodb with three collections defined -
@@ -48,6 +48,28 @@ Limitations/Issues:
 
 * Docker server needs to be configured on secure port. Currently, it
    is public for anyone to access it.
+
+How to deploy/run:
+------------------
+
+* The cloud/docker server is specified in etc/cloudmesh_docker.yaml which is were it should be modified.
+  Following scenarios are implemented/not implemented:
+  (1) Docker server on local machine : Not implemented
+  (2) Docker server on remote machine: Not implemented
+  (3) Docker server on AWS: Implemented
+  (4) Multiple docker machines: Not implemented
+
+* Installing docker server on AWS:
+  (1) Configure security groups on EC2 instance through AWS GUI (Tested: Security group open to the world which is not secure - tcp,icmp - Not recommended)
+  (2) Download certificate .pem file to ssh into the machine
+  (3) Run the following commands on the machine:
+      (a) sudo apt-get update
+      (b) sudo apt-get -y install docker.io
+      (c) Modify /etc/init/docker.io.conf to add DOCKER_OPTS='-H tcp://<ip>:4243 -H unix:///var/run/docker.sock' where <ip> is eth0 ip (Tested but not recommended as <ip> is open to the world)
+      (d) sudo service docker.io restart
+      (e) sudo docker.io pull ubuntu (This downloads ubuntu images for docker containers)
+
+* Start cloudmesh shell and run docker commands
 
 Github repository:
 ------------------

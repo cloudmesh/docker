@@ -1,0 +1,6 @@
+meta:
+    yaml_version: 2.1
+    kind: docker
+cloudmesh:
+    docker:
+        cloud: 54.148.243.157                   
