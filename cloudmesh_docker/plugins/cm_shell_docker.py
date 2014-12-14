@@ -37,9 +37,9 @@ class cm_shell_docker:
         Arguments:
 
           NAME     The name of the docker
-          WORKERS  The number of workers in the virtual docker
           CLOUD    The name of the cloud on which the virtual docker
                    is to be deployed
+          IMAGE    Docker server images
 
         Options:
 

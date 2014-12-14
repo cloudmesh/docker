@@ -19,6 +19,17 @@ username = cloudmesh.load().username()
 class Docker(object):
 
     def docker_container_create(self, image, containerName=None, containers=None):
+        """Creates docker container
+
+
+        :param str image: Available images for docker 
+        :param str containerName: Name of docker container
+        :param int containers: Number of docker containers to be created
+        :returns: None
+        :rtype: NoneType
+
+
+        """
         dockerserverobjs = Cloudmeshdocker.objects()
         if len(dockerserverobjs) == 0:
             print("Cloud is not defined yet")
@@ -59,6 +70,15 @@ class Docker(object):
                 image), containerId=data['Id'], containerStatus="created").save()
 
     def docker_container_attach(self, containerName=None):
+        """Docker container attach
+
+
+        :param str containerName: Name of docker container
+        :returns: None
+        :rtype: NoneType
+
+
+        """
         dockerserverobjs = Cloudmeshdocker.objects()
         if len(dockerserverobjs) == 0:
             print("Cloud is not defined yet")
@@ -78,6 +98,15 @@ class Docker(object):
         resp = requests.post(url=postUrl)
 
     def docker_container_status_change(self, status=None, containerName=None):
+        """Change status of docker container
+
+        :param str status: Docker container status to be changed to
+        :param str containerName: Name of Docker container
+        :returns: None
+        :rtype: NoneType
+
+
+        """
         if status is None:
             print("No status specified")
             return
@@ -106,6 +135,15 @@ class Docker(object):
         containerInfo.update(set__containerStatus=status)
 
     def docker_container_delete(self, containerName=None):
+        """Deleting docker container
+        
+
+        :param str containerName: Name of docker container
+        :returns: None
+        :rtype: NoneType
+
+        
+        """
         dockerserverobjs = Cloudmeshdocker.objects()
         if len(dockerserverobjs) == 0:
             print("Cloud is not defined yet")
@@ -128,6 +166,14 @@ class Docker(object):
         containerInfo.delete()
 
     def docker_container_list(self):
+        """List of docker containers
+
+
+        :returns: None
+        :rtype: NoneType
+
+
+        """
         containers = Container.objects()
         if len(containers) == 0:
             print("No containers exist")
@@ -138,6 +184,15 @@ class Docker(object):
             print(container.containerName + "\t\t" + container.containerStatus)
 
     def docker_service_start(self, cloud):
+        """Starting docker cloud service
+
+
+        :param str cloud: Name of cloud where docker server is deployed
+        :returns: None
+        :rtype: NoneType
+
+
+        """
         ##
         # TODO: Add support for more clouds
         ##
@@ -179,6 +234,14 @@ class Docker(object):
         Cloudmeshdocker(dockerserver=cloud).save()
 
     def docker_images_list(self):
+        """List of docker images
+        
+        
+        :returns: None
+        :rtype: NoneType
+
+
+        """
         images = Images.objects()
         if len(images) == 0:
             print("No images exist")
@@ -188,6 +251,14 @@ class Docker(object):
             print(image.imageName)
 
     def docker_service_cloud_list(self):
+        """List the docker clouds
+
+
+        :returns: None
+        :rtype: NoneType
+
+
+        """
         dockerserverobjs = Cloudmeshdocker.objects()
         if len(dockerserverobjs) == 0:
             print("No cloud exist yet")
@@ -198,6 +269,15 @@ class Docker(object):
             print(server.dockerserver)
 
     def docker_service_cloud_delete(self, cloud=None):
+        """Deletes docker cloud
+
+
+        :param str cloud: Name of docker cloud
+        :returns: None
+        :rtype: NoneType
+
+
+        """
         dockerserverobjs = Cloudmeshdocker.objects()
         if len(dockerserverobjs) == 0:
             print("No cloud to remove")
