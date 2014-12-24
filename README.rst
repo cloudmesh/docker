@@ -59,9 +59,10 @@ How to deploy/run:
   (3) Docker server on AWS: Implemented
   (4) Multiple docker machines: Not implemented
 
-* Installing docker server on AWS:
-  (1) Configure security groups on EC2 instance through AWS GUI (Tested: Security group open to the world which is not secure - tcp,icmp - Not recommended)
-  (2) Download certificate .pem file to ssh into the machine
+* Installing docker server on AWS/Cloudmesh:
+  (1) Configure security groups on EC2 instance through AWS GUI (Tested: Security group open to the world which is not secure - tcp,icmp - Not recommended). For cloudmesh, create security group using following:
+  nova secgroup-add-rule default tcp 4243 4243 0.0.0.0/0
+  (2) Download certificate .pem file to ssh into the machine for AWS.
   (3) Run the following commands on the machine:
       (a) sudo apt-get update
       (b) sudo apt-get -y install docker.io
